@@ -80,20 +80,6 @@
       }
     },
     {
-      "name": "bilibili_search",
-      "description": "从哔哩哔哩搜索视频，最终只会返回一个具体视频链接",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "keyword": {
-            "type": "string",
-            "description": "要搜的关键词"
-          }
-        },
-        "required": ["keyword"]
-      }
-    },
-    {
       "name": "capture_screen",
       "description": "截取当前屏幕并且分析图片内容",
       "parameters": {
