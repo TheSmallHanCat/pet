@@ -1,0 +1,113 @@
+{
+  "debug": false,
+  "api_key": "your_api_key",
+  "api_base": "https://api.openai.com/v1",
+  "model": "your_model_name",
+  "system_prompt": "你是一个友好的桌面助手，非常聪明，你的名字叫喵喵，你可以和用户自由聊天，你被设计来帮助用户、回答用户的问题，如果用户需要你帮忙写代码、修改代码或者文案，你可以以文本对话的形式告诉用户，也可以帮用户执行一些简单的操作，你的回复最好简洁、通俗易懂，不管是回复还是代码，均不要使用markdown语法，用户端有html渲染器，所以你需要使用前端三件套语法进行替代，正常聊天字数不建议超过50字。\n\n当你调用工具函数时，你需要理解用户的请求目的是调用哪个函数（比如打开B站并且搜索xxx，则你需要调用浏览器打开B站的搜索网页，如果是在B站搜索，你才需要调用搜索函数）函数会返回具体的执行结果。你需要根据这些结果向用户反馈操作是否成功，例如:\n- 如果收到「系统音量已设置为50%」，你应该告诉用户已经设置完成\n- 如果收到「程序启动失败: 文件不存在」，你应该告诉用户失败原因\n\n如果你需要调用工具，请在你的回复中包含一个 **单独的** ```json ``` 代码块，其中包含符合 Function Calling 格式的 JSON 对象。你可以在代码块的前后添加文字说明。如果不需要调用工具，直接回复纯文本即可。\n\n例如，当用户说「把音量调到50%」时，你的回复应该如下：\n我现在帮你调整音量。\n```json\n{\n  \"tool_calls\": [\n    {\n      \"id\": \"{随机纯数字id}\",\n      \"type\": \"function\",\n      \"function\": {\n        \"name\": \"set_volume\",\n        \"arguments\": \"{\\\"level\\\":50}\" \n      }\n    }\n  ]\n}\n```\n\n然后在收到函数返回结果成功后，你会回复完成状态\n\n请严格遵守格式，Function Call JSON 必须完整且只出现在一对 ```json ``` 代码块中。",
+  "functions": [
+    {
+      "name": "open_program",
+      "description": "打开系统程序，需要注意安全性，不要打开敏感进程",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "program_name": {
+            "type": "string",
+            "description": "程序名称，必须是英文名，例如notepad.exe,cmd.exe等"
+          }
+        },
+        "required": ["program_name"]
+      }
+    },
+    {
+      "name": "open_notepad",
+      "description": "打开系统记事本应用",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "set_volume",
+      "description": "设置系统音量，允许的范围是0-100",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "integer",
+            "description": "音量级别，0-100"
+          }
+        },
+        "required": ["level"]
+      }
+    },
+    {
+      "name": "open_url",
+      "description": "在默认浏览器中打开一个URL",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "要打开的完整URL"
+          }
+        },
+        "required": ["url"]
+      }
+    },
+    {
+      "name": "open_wyy",
+      "description": "打开网易云应用,如果网易云音乐软件打不开",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "weather",
+      "description": "查天气，需要传入城市名",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "要查询的城市"
+          }
+        },
+        "required": ["city"]
+      }
+    },
+    {
+      "name": "bilibili_search",
+      "description": "从哔哩哔哩搜索视频，最终只会返回一个具体视频链接",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "要搜的关键词"
+          }
+        },
+        "required": ["keyword"]
+      }
+    },
+    {
+      "name": "capture_screen",
+      "description": "截取当前屏幕并且分析图片内容",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  ],
+  "pet_states": {
+    "idle": "assets/pet_idle.gif",
+    "attention": "assets/pet_attention.gif",
+    "talking": "assets/pet_talking.gif",
+    "sleeping": "assets/pet_sleeping.gif"
+  },
+  "idle_timeout_seconds": 60
+}
